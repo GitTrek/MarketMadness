@@ -1,22 +1,215 @@
 {
-    "categories": [
+    "typeCategories": [
         {
-            "title": "Planetary Mats",
-            "categoryName":"planetary"
+            "title":"Planetary Mats",
+            "type":"Planetary Resources",
+            "sequence":1,
+            "subTypeCategories": [
+                {
+                    "subType": "Alloy",
+                    "seqence": 1
+                },                
+                {
+                    "subType": "Compound",
+                    "seqence": 2
+                },                
+                {
+                    "subType": "Metals",
+                    "seqence": 3
+                }
+            ]
         },
         {
-            "title": "Ores",
-            "categoryName":"ore"
+            "title":"Minerals",
+            "type":"Minerals",
+            "sequence":2
         },
         {
-            "title": "Minerals",
-            "categoryName":"mineral"
+            "title":"Ores",
+            "type":"Raw Ores",
+            "sequence":3
         }
     ],
     "materials":[
         {
             "name":"Lustering Alloy",
-            "type":"planetary"
+            "type":"Planetary Resources",
+            "subType":"Alloy"
+        },
+        {
+            "name":"Gleaming Alloy",
+            "type":"Planetary Resources",
+            "subType":"Alloy",
+            "status":"priority"
+        },
+        {
+            "name":"Condensed Alloy",
+            "type":"Planetary Resources",
+            "subType":"Alloy"
+        },
+        {
+            "name":"Precious Alloy",
+            "type":"Planetary Resources",
+            "subType":"Alloy",
+            "status":"priority"
+        },
+        {
+            "name":"Sheen Compound",
+            "type":"Planetary Resources",
+            "subType":"Compound"
+        },
+        {
+            "name":"Motley Compound",
+            "type":"Planetary Resources",
+            "subType":"Compound"
+        },
+        {
+            "name":"Fiber Composite",
+            "type":"Planetary Resources",
+            "subType":"Compound"
+        },
+        {
+            "name":"Lucent Compound",
+            "type":"Planetary Resources",
+            "subType":"Compound"
+        },
+        {
+            "name":"Opulent Compound",
+            "type":"Planetary Resources",
+            "subType":"Compound"
+        },
+        {
+            "name":"Glossy Compound",
+            "type":"Planetary Resources",
+            "subType":"Compound"
+        },
+        {
+            "name":"Crystal Compound",
+            "type":"Planetary Resources",
+            "subType":"Compound"
+        },
+        {
+            "name":"Base Metals",
+            "type":"Planetary Resources",
+            "subType":"Metals"
+        },
+        {
+            "name":"Heavy Metals",
+            "type":"Planetary Resources",
+            "subType":"Metals",
+            "status":"priority"
+        },
+        {
+            "name":"Noble Metals",
+            "type":"Planetary Resources",
+            "subType":"Metals",
+            "status":"priority"
+        },
+        {
+            "name":"Reactive Metals",
+            "type":"Planetary Resources",
+            "subType":"Metals"
+        },
+        {
+            "name":"Toxic Metals",
+            "type":"Planetary Resources",
+            "subType":"Metals"
+        },
+        {
+            "name":"Veldspar",
+            "type":"Raw Ores"
+        },
+        {
+            "name":"Scordite",
+            "type":"Raw Ores"
+        },
+        {
+            "name":"Pyroxeres",
+            "type":"Raw Ores"
+        },
+        {
+            "name":"Plagioclase",
+            "type":"Raw Ores"
+        },
+        {
+            "name":"Omber",
+            "type":"Raw Ores"
+        },
+        {
+            "name":"Kernite",
+            "type":"Raw Ores"
+        },
+        {
+            "name":"Jaspet",
+            "type":"Raw Ores",
+            "status":"priority"
+        },
+        {
+            "name":"Hemorphite",
+            "type":"Raw Ores"
+        },
+        {
+            "name":"Hedbergite",
+            "type":"Raw Ores"
+        },
+        {
+            "name":"Spodumain",
+            "type":"Raw Ores",
+            "status":"priority"
+        },
+        {
+            "name":"Dark Ochre",
+            "type":"Raw Ores"
+        },
+        {
+            "name":"Gniess",
+            "type":"Raw Ores",
+            "status":"priority"
+        },
+        {
+            "name":"Crokite",
+            "type":"Raw Ores",
+            "status":"priority"
+        },
+        {
+            "name":"Bistot",
+            "type":"Raw Ores"
+        },
+        {
+            "name":"Arkonor",
+            "type":"Raw Ores"
+        },
+        {
+            "name":"Mercoxit",
+            "type":"Raw Ores"
+        },
+        {
+            "name":"Tritanium",
+            "type":"Minerals"
+        },
+        {
+            "name":"Pyerite",
+            "type":"Minerals"
+        },
+        {
+            "name":"Mexallon",
+            "type":"Minerals"
+        },
+        {
+            "name":"Isogen",
+            "type":"Minerals"
+        },
+        {
+            "name":"Nocxium",
+            "type":"Minerals"
+        },
+        {
+            "name":"Zydrine",
+            "type":"Minerals"
+        },
+        {
+            "name":"Megacyte",
+            "type":"Minerals"
         },
     ]
 }
