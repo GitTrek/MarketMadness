@@ -1,0 +1,22 @@
+{
+    "categories": [
+        {
+            "title": "Planetary Mats",
+            "categoryName":"planetary"
+        },
+        {
+            "title": "Ores",
+            "categoryName":"ore"
+        },
+        {
+            "title": "Minerals",
+            "categoryName":"mineral"
+        }
+    ],
+    "materials":[
+        {
+            "name":"Lustering Alloy",
+            "type":"planetary"
+        },
+    ]
+}
