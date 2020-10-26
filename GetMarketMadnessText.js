@@ -1,19 +1,10 @@
-/* 
-author: Sanakan
-release date: 10/5/2020
-description: build out a list of EO materials for H2O Discord
-dependencies: Node JS
-*/
-
 console.log('Start Material Market spreadsheet conversion to text');
 var spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1Js67Vnv6klQyvfznCcIlu_joQZvRe4At47KJ-dTK3dQ/gviz/tq?tqx=out:json&gid=513281805';
 const https = require('https');
-const fs = require('fs') 
-var matFormattedText = '';
+const fs = require('fs') ;
 var matFormattedTextStart = '```md';
 var matFormattedTextEnd = '```';
 var valIndent = 18;
-var finalIndent = 18;
 
 var includedTitles = [
   "Planetary Mats",
@@ -85,6 +76,160 @@ function getSpaceString(len)
     return spaceString;
 }
 
+function writeToFile(matFormattedText)
+{
+  // output to file
+  fs.writeFile('MarketMadnessText.txt', matFormattedText, (err) => { 
+      if (err) throw err; 
+  });
+}
+
+function getFormattedText(sheetJsonObj)
+{
+  var matFormattedText = '';
+  matFormattedText += matFormattedTextStart + '\n';
+
+  for (var row of sheetJsonObj.table.rows)
+  {
+      var matName = row.c[0];
+      var matValue = row.c[3];
+      var finalIndent = valIndent;
+
+      if (matName && (includedTitles.indexOf(matName.v) >= 0 || includedMaterials.indexOf(matName.v) >= 0))
+      {
+          if (matName.v == 'Minerals' || matName.v == 'Ores')
+              matFormattedText += '\n';
+
+          if (selectedMaterials.indexOf(matName.v) >= 0)
+          {
+            matFormattedText += '#';
+            finalIndent--;
+          }
+
+          if (includedTitles.indexOf(matName.v) >= 0)
+            matFormattedText += '< ';
+
+          matFormattedText += matName.v;
+          
+          if (includedTitles.indexOf(matName.v) >= 0)
+            matFormattedText += ' >';
+
+          if (matValue)
+          {
+              matFormattedText += ':' + getSpaceString(finalIndent - matName.v.length) + matValue.v;
+          }
+
+          matFormattedText += '\n';
+      }
+  }
+  matFormattedText += matFormattedTextEnd;
+
+  return matFormattedText;
+}
+
+function assignPriceValues(sheetJsonObj, matJson)
+{
+  var matJsonObjList = matJson.materials;
+
+  for (var matObj of matJsonObjList)
+  {
+    for (var row of sheetJsonObj.table.rows)
+    {
+      var matName = row.c[0];
+      var matValue = row.c[3];
+
+      if ((matName && (matObj.name == matName.v)) && matValue)
+      {
+        matObj.price = matValue.v;
+      }
+    }
+  }
+
+  return matJsonObjList;
+}
+
+function printMatAndPrice(mat, indent)
+{
+  var matAndPriceText = "";
+
+  if (mat.status == "priority")
+  {
+    matAndPriceText += "#";
+    indent--;
+  }
+
+  matAndPriceText += mat.name;
+  
+  if (mat.price)
+  {
+    var price = 0;
+
+    if (mat.name == "Tritanium")
+      price = mat.price.toFixed(2);
+    else
+      price = Math.floor(mat.price);
+
+    matAndPriceText += ':' + getSpaceString(indent - mat.name.length) + price;
+  }
+
+  matAndPriceText += '\n';
+
+  return matAndPriceText;
+}
+
+function getFormattedText2(sheetJsonObj)
+{
+  var fullMatJson = JSON.parse(fs.readFileSync('Materials.json'));
+  var matFormattedText = '';
+  var matJsonObjList = assignPriceValues(sheetJsonObj, fullMatJson);  
+  var finalIndent = valIndent;
+  //console.log(matJsonObjList);
+  matFormattedText += matFormattedTextStart + '\n';
+
+  var currentSubTypeCat = "";
+
+  for (var cat of fullMatJson.typeCategories.sort(function(a,b){
+    return a.sequence - b.sequence;
+  }))
+  {
+    matFormattedText += "< " + cat.title + " >";
+    matFormattedText += '\n';
+
+    for (var mat of matJsonObjList)
+    {
+      if (mat.type == cat.type)
+      {
+        if (cat.subTypeCategories)
+        {
+          for (var subCat of cat.subTypeCategories.sort(function(a,b){
+            return a.sequence - b.sequence;
+          }))
+          {            
+            if (mat.subType == subCat.subType)
+            {
+              if (currentSubTypeCat != "" && currentSubTypeCat != subCat.subType)
+                matFormattedText += '\n';
+  
+              currentSubTypeCat = subCat.subType;
+              matFormattedText += printMatAndPrice(mat, finalIndent);
+            }
+          }
+        }
+        else
+          matFormattedText += printMatAndPrice(mat, finalIndent);
+      }
+    }
+      
+    matFormattedText += '\n';
+  }
+
+  matFormattedText += matFormattedTextEnd;
+  return matFormattedText;
+
+  console.log(matJson);
+}
+
+
 https.get(spreadsheetUrl, (resp) => {
   let sheetJson = '';
 
@@ -100,47 +245,11 @@ https.get(spreadsheetUrl, (resp) => {
   resp.on('end', () => {
     sheetJson = sheetJson.substring(sheetJson.indexOf(startDelim) + startDelim.length, sheetJson.lastIndexOf(endDelim));
     var sheetJsonObj = JSON.parse(sheetJson);
-    matFormattedText += matFormattedTextStart + '\n';
 
-    for (var row of sheetJsonObj.table.rows)
-    {
-        var matName = row.c[0];
-        var matValue = row.c[3];
-        finalIndent = valIndent;
+    //var matFormattedText = getFormattedText(sheetJsonObj);
+    var matFormattedText = getFormattedText2(sheetJsonObj);
 
-        if (matName && (includedTitles.indexOf(matName.v) >= 0 || includedMaterials.indexOf(matName.v) >= 0))
-        {
-            if (matName.v == 'Minerals' || matName.v == 'Ores')
-                matFormattedText += '\n';
-
-            if (selectedMaterials.indexOf(matName.v) >= 0)
-            {
-              matFormattedText += '#';
-              finalIndent--;
-            }
-
-            if (includedTitles.indexOf(matName.v) >= 0)
-              matFormattedText += '< ';
-
-            matFormattedText += matName.v;
-            
-            if (includedTitles.indexOf(matName.v) >= 0)
-              matFormattedText += ' >';
-
-            if (matValue)
-            {
-                matFormattedText += ':' + getSpaceString(finalIndent - matName.v.length) + matValue.v;
-            }
-
-            matFormattedText += '\n';
-        }
-    }
-    matFormattedText += matFormattedTextEnd;
-
-    // output to file
-    fs.writeFile('MarketMadnessText.txt', matFormattedText, (err) => { 
-        if (err) throw err; 
-    });
+    writeToFile(matFormattedText);
 
     console.log('End Material Market spreadsheet conversion to text');
   });
