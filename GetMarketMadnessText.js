@@ -6,64 +6,6 @@ var matFormattedTextStart = '```md';
 var matFormattedTextEnd = '```';
 var valIndent = 18;
 
-var includedTitles = [
-  "Planetary Mats",
-	"Ores",
-	"Minerals",
-]
-var includedMaterials = [
-	"Lustering Alloy",
-	"Gleaming Alloy",
-	"Condensed Alloy",
-	"Precious Alloy",
-	"Sheen Compound",
-	"Motley Compound",
-	"Fiber Composite",
-	"Lucent Compound",
-	"Opulent Compound",
-	"Glossy Compound",
-	"Crystal Compound",
-	"Dark Compound",
-	"Base Metals",
-	"Heavy Metals",
-	"Noble Metals",
-	"Reactive Metals",
-	"Toxic Metals",
-	"Veldspar",
-	"Scordite",
-	"Pyroxeres",
-	"Plagioclase",
-	"Omber",
-	"Kernite",
-	"Jaspet",
-	"Hemorphite",
-	"Hedbergite",
-	"Spodumain",
-	"Dark Ochre",
-	"Gneiss",
-	"Crokite",
-	"Bistot",
-	"Arkonor",
-	"Mercoxit",
-	"Tritanium",
-	"Pyerite",
-	"Mexallon",
-	"Isogen",
-	"Nocxium",
-	"Zydrine",
-	"Megacyte"
-];
-var selectedMaterials = [
-  "Gleaming Alloy",
-	"Base Metals",
-	"Heavy Metals",
-	"Noble Metals",
-	"Jaspet",
-	"Spodumain",
-	"Gneiss",
-	"Crokite"
-];
-
 function getSpaceString(len)
 {
     var spaceString = '';
@@ -82,49 +24,6 @@ function writeToFile(matFormattedText)
   fs.writeFile('MarketMadnessText.txt', matFormattedText, (err) => { 
       if (err) throw err; 
   });
-}
-
-function getFormattedText(sheetJsonObj)
-{
-  var matFormattedText = '';
-  matFormattedText += matFormattedTextStart + '\n';
-
-  for (var row of sheetJsonObj.table.rows)
-  {
-      var matName = row.c[0];
-      var matValue = row.c[3];
-      var finalIndent = valIndent;
-
-      if (matName && (includedTitles.indexOf(matName.v) >= 0 || includedMaterials.indexOf(matName.v) >= 0))
-      {
-          if (matName.v == 'Minerals' || matName.v == 'Ores')
-              matFormattedText += '\n';
-
-          if (selectedMaterials.indexOf(matName.v) >= 0)
-          {
-            matFormattedText += '#';
-            finalIndent--;
-          }
-
-          if (includedTitles.indexOf(matName.v) >= 0)
-            matFormattedText += '< ';
-
-          matFormattedText += matName.v;
-          
-          if (includedTitles.indexOf(matName.v) >= 0)
-            matFormattedText += ' >';
-
-          if (matValue)
-          {
-              matFormattedText += ':' + getSpaceString(finalIndent - matName.v.length) + matValue.v;
-          }
-
-          matFormattedText += '\n';
-      }
-  }
-  matFormattedText += matFormattedTextEnd;
-
-  return matFormattedText;
 }
 
 function assignPriceValues(sheetJsonObj, matJson)
@@ -177,7 +76,7 @@ function printMatAndPrice(mat, indent)
   return matAndPriceText;
 }
 
-function getFormattedText2(sheetJsonObj)
+function getFormattedText(sheetJsonObj)
 {
   var fullMatJson = JSON.parse(fs.readFileSync('Materials.json'));
   var matFormattedText = '';
@@ -225,8 +124,6 @@ function getFormattedText2(sheetJsonObj)
 
   matFormattedText += matFormattedTextEnd;
   return matFormattedText;
-
-  console.log(matJson);
 }
 
 
@@ -247,7 +144,7 @@ https.get(spreadsheetUrl, (resp) => {
     var sheetJsonObj = JSON.parse(sheetJson);
 
     //var matFormattedText = getFormattedText(sheetJsonObj);
-    var matFormattedText = getFormattedText2(sheetJsonObj);
+    var matFormattedText = getFormattedText(sheetJsonObj);
 
     writeToFile(matFormattedText);
 
