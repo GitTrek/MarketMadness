@@ -89,6 +89,11 @@
             "subType":"Compound"
         },
         {
+            "name":"Dark Compound",
+            "type":"Planetary Resources",
+            "subType":"Compound"
+        },
+        {
             "name":"Base Metals",
             "type":"Planetary Resources",
             "subType":"Metals"
